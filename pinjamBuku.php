@@ -7,6 +7,7 @@ require_once('./user.php');
 require_once('./sirkulasi.php');
 
 session_start();
+
 // check if login
 if (isset($_SESSION["user"]) && $_SESSION["user"]->is_member) {
 	// cek apakah member expire atau pending
@@ -35,8 +36,9 @@ if (isset($_SESSION["user"]) && $_SESSION["user"]->is_member) {
 			// unset scanned after finish
 			unset($_SESSION["scanned"]);
 		} elseif (isset($_POST["itemCode"]) && $_POST["operation"] == "s") {
+			// secure the input
+			$item_code = $conn->real_escape_string($_POST["itemCode"]);
 			// get info of scanned item
-			$item_code = $_POST["itemCode"];
 			if ($_SESSION["scanned"] = sirkulasi::getScannedInfo($item_code, $conn)) {
 				$data["title"] = $_SESSION["scanned"]["title"];
 				$data["item_code"] = $_SESSION["scanned"]["item_code"];

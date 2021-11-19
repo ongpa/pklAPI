@@ -40,7 +40,8 @@ class user {
             "loan_limit" => $member_d["loan_limit"],
             "loan_periode" => $member_d["loan_periode"],
             "reborrow_limit" => $member_d["reborrow_limit"],
-            "fine_each_day" => $member_d["grace_periode"]
+            "fine_each_day" => $member_d["fine_each_day"],
+            "grace_periode" => $member_d["grace_periode"]
           );
       }
   }

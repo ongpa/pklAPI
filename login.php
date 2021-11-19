@@ -5,6 +5,11 @@ require_once('./sysconf.php');
 require_once('./user.php');
 
 session_start();
+
+// secure the input
+$user_id = $conn->real_escape_string($_POST["userId"]);
+$password = $conn->real_escape_string($_POST["password"]);
+
 // login by creating user instance
 $_SESSION["user"] = new user($conn, $user_id, $password);
 
