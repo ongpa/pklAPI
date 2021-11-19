@@ -48,13 +48,13 @@ class user {
   // function to change password
   public function changePassword($old_pass, $new_pass, $conf_new_pass) {
     // check old password
-    $pass_check_q = $conn->query("SELECT member_id FROM member WHERE member_id='" .$this->member_id. "' AND mpasswd=MD5('" .$old_pass. "')");
+    $pass_check_q = $this->obj_db->query("SELECT member_id FROM member WHERE member_id='" .$this->member_id. "' AND mpasswd=MD5('" .$old_pass. "')");
     if ($pass_check_q->num_rows > 0) {
       // check if new password and confirmation is same
       if ($new_pass && $conf_new_pass && ($new_pass === $conf_new_pass)) {
         // change the password
-        if ($this->obj_db->query("UPDATE member SET mpasswd=MD5('" .$new_pass. "') WHERE member_id='" .$member_id. "'") === true) {
-          $msg = "Password berhasil diganti";
+        if ($this->obj_db->query("UPDATE member SET mpasswd=MD5('" .$new_pass. "') WHERE member_id='" .$this->member_id. "'") === true) {
+          $msg = "success";
         } else {
           $msg = "Penggantian password gagal";
         }
@@ -76,7 +76,7 @@ class user {
       LEFT JOIN member AS m ON l.member_id=m.member_id
       LEFT JOIN item AS i ON l.item_code=i.item_code
       LEFT JOIN biblio AS b ON i.biblio_id=b.biblio_id
-      WHERE l.member_id='" .$this->member_id. "'");
+      WHERE l.member_id='" .$this->member_id. "' AND l.is_lent='1' AND l.is_return='0'");
 
     // put every item into array
     while ($on_loan_d = $on_loan_q->fetch_assoc()) {

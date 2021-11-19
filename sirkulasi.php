@@ -69,7 +69,7 @@ class sirkulasi {
 				} else {
 						// get data from the loan rules table with GMD specified but collection type not specified
 						$loan_rules_q = $this->obj_db->query("SELECT * FROM mst_loan_rules
-								WHERE member_type_id=".intval($this->member_type_id)." $gmd_string");
+								WHERE member_type_id=".intval($_SESSION["user"]->member_type_id)." $gmd_string");
 						// check if the loan rules exists
 						if ($loan_rules_d = $loan_rules_q->fetch_assoc()) {
 								$this->loan_limit = $loan_rules_d['loan_limit'];
@@ -88,12 +88,12 @@ class sirkulasi {
 	// loan item
 	public function loanItem($scanned) {
 		// check item availability and loan status
-		$avail_q = $this->obj_db->query("SELECT item_code FROM loan
+		$avail_q = $this->obj_db->query("SELECT item_code, member_id FROM loan
 			WHERE item_code ='" .$scanned["item_code"]. "' AND is_lent='1' AND is_return='0'");
-		if ($avail_q->num_rows > 0) {
+		if ($avail_d = $avail_q->fetch_assoc()) {
 			$msg = "Item sedang dipinjam member lain";
 		} elseif ((int)$scanned["no_loan"] > 0) {
-			$msg = "Item sedang tidak dipinjamkan";
+			$msg = "Item sedang tidak bisa dipinjam";
 		} else {
 			// check if being reserved by other member
 			$resv_q = $this->obj_db->query("SELECT l.loan_id FROM reserve AS rs
@@ -126,7 +126,7 @@ class sirkulasi {
 
 					// insert to database
 					$insert_q = "INSERT INTO loan (item_code, member_id, loan_date, due_date, renewed, loan_rules_id, is_lent, is_return)
-						VALUES ('" .$scanned["item_code"]. "', '" .$_SESSION["member_id"]. "', '$loan_date', '$due_date', '0', '" .$this->loan_rules_id. "', '1', '0')";
+						VALUES ('" .$scanned["item_code"]. "', '" .$_SESSION["user"]->member_id. "', '$loan_date', '$due_date', '0', '" .$this->item_loan_rules. "', '1', '0')";
 					if ($this->obj_db->query($insert_q) === true) {
 						$msg = "Peminjaman item berhasil";
 					} else {
@@ -150,7 +150,7 @@ class sirkulasi {
 		$on_loan_q = $this->obj_db->query("SELECT count(item_code) FROM loan
 			WHERE member_id='" .$_SESSION["user"]->member_id. "' AND is_lent=1 AND is_return=0 $lrules_string");
 		
-		return $on_loan_q->fetch_row["0"];
+		return $on_loan_q->fetch_row[0];
 	}
 
 	// get info about item being scanned

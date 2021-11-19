@@ -4,24 +4,17 @@ define("INDEX_AUTH", "1");
 require_once('./sysconf.php');
 require_once('./user.php');
 
-// Variables
-$_POST["user_id"] = "memb-01";
-$_POST["password"] = "password";
-$user_id = $_POST["user_id"];
-$password = $_POST["password"];
-$data = array();
-
-// Algorithm
-// session_start();
-
+session_start();
 // login by creating user instance
 $_SESSION["user"] = new user($conn, $user_id, $password);
 
 // check if success
 if ($_SESSION["user"]->is_member) {
 	$data["login_status"] = "true";
-	$data["member_id"] = $_SESSION["user"]->member_name;
+	$data["member_id"] = $_SESSION["user"]->member_id;
+	$data["member_name"] = $_SESSION["user"]->member_name;
 	$data["expire_date"] = $_SESSION["user"]->expire_date;
+	$data["is_expired"] = $_SESSION["user"]->is_expired;
 
 	// load holiday from database
 	$_SESSION["holiday_dayname"] = array();
