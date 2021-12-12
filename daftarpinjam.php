@@ -9,6 +9,7 @@ session_start();
 // check if login
 if (isset($_SESSION["user"]) && $_SESSION["user"]->is_member) {
 	// get loan list
+	$_SESSION["user"]->obj_db = $conn;
 	$data = $_SESSION["user"]->getItemLoan();
 } else {
 	$data["login_status"] = "false";

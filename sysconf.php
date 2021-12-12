@@ -7,13 +7,16 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+error_reporting(E_ERROR);
+
 // timezone
 date_default_timezone_set('Asia/Jakarta');
 
-$servername = "localhost";
-$username = "ongpa";
-$password = "password";
-$db_name = "senayan";
+// database related
+$servername = "";
+$username = "";
+$password = "";
+$db_name = "";
 
 // create connection
 $conn = new mysqli($servername, $username, $password, $db_name);

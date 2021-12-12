@@ -14,6 +14,7 @@ if(isset($_SESSION["user"]) && $_SESSION["user"]->is_member) {
 		$new_pass = $conn->real_escape_string($_POST["newPass"]);
 		$conf_new_pass = $conn->real_escape_string($_POST["confPass"]);
 		// try to change the password
+		$_SESSION["user"]->obj_db = $conn;
 		$data["msg"] = $_SESSION["user"]->changePassword($old_pass, $new_pass, $conf_new_pass);
 	} else {
 		$data["msg"] = "Semua label harus diisi";
